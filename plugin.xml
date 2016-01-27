@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<plugin xmlns="http://www.phonegap.com/ns/plugins/1.0"
+        id="edu.berkeley.eecs.emission.cordova.settings"
+        version="0.0.1">
+
+  <name>ConnectionSettings</name>
+  <description>Simple package that stores all the connection settings that need to be configured</description>
+  <author>K. Shankari (shankari@eecs.berkeley.edu)</author>
+  <license>Modified BSD license</license>
+
+  <engines>
+    <engine name="cordova" version=">=3.6.0"/>
+  </engines>
+
+  <asset src="www/connectionsettings.js" target="js/connectionsettings.js"/>
+
+  <js-module src="www/connectionsettings.js" name="connectionsettings">
+    <clobbers target="cordova.plugins.BEMConnectionSettings" />
+  </js-module>
+
+  <platform name="android">
+    <config-file target="res/xml/config.xml" parent="/*">
+      <feature name="ConnectionSettings">
+        <param name="android-package" value="edu.berkeley.eecs.emission.cordova.settings.ConnectionSettingsPlugin"/>
+      </feature>
+    </config-file>
+
+    <source-file src="src/android/ConnectionSettingsPlugin.java" target-dir="src/edu/berkeley/eecs/emission/cordova/connectionsettings"/>
+    <source-file src="src/android/ConnectionSettings.java" target-dir="src/edu/berkeley/eecs/emission/cordova/connectionsettings"/>
+    <resource-file src="res/android/connect.xml" target="res/values/connect.xml" />
+  </platform>
+
+  <platform name="ios">
+    <config-file target="config.xml" parent="/*">
+      <feature name="ConnectionSettings">
+        <param name="ios-package" value="BEMConnectionSettings" />
+      </feature>
+    </config-file>
+
+    <header-file src="src/ios/BEMConnectionSettings.h"/>
+    <source-file src="src/ios/BEMConnectionSettings.m"/>
+    <header-file src="src/ios/BEMConnectionSettingsPlugin.h"/>
+    <source-file src="src/ios/BEMConnectionSettingsPlugin.m"/>
+    <resource-file src="res/ios/connect.plist"/>
+  </platform>
+</plugin>

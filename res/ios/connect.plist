@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>connect_url</key>
+    <string>https://e-mission.eecs.berkeley.edu</string>
+    <!--
+      Use this connect string to connect to localhost from the emulator.
+      To connect using a physical phone, determine the external IP address using ifconfig
+      and use the URL http://<external_ip>:8080/
+    <string>http://localhost:8080/</string>
+    -->
+    <key>google_webapp_client_id</key>
+    <string>97387382925-j53gqihf7j4o0h1sp6r5cllhqikfoq6o.apps.googleusercontent.com</string>
+    <key>google_ios_client_id</key>
+    <string>97387382925-ac4aaamik00o7a7bjjcik550nt9urbf3.apps.googleusercontent.com</string>
+    <key>google_ios_client_secret</key>
+    <string>pcuWV-OiONjmJjlJzpsWDbDI</string>
+    <key>moves_client_id</key>
+    <string>Get from https://dev.moves-app.com</string>
+    <key>parse_app_id</key>
+    <string>ZsRZKw438pSE7eimcWMAiKg4YM4mvIK4NWp3l6Mk</string>
+    <key>parse_client_id</key>
+    <string>DYXMs28JMW0rDApIEH9CHtUgA11P4vjZRnCrwJCS</string>
+</dict>
+</plist>
