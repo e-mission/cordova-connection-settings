@@ -1,6 +1,8 @@
-package edu.berkeley.eecs.cordova.comm;
+package edu.berkeley.eecs.emission.cordova.connectionsettings;
 
 import android.content.Context;
+
+import edu.berkeley.eecs.emission.R;
 
 /*
  * Single class that returns all the connection level settings that need to be customized
