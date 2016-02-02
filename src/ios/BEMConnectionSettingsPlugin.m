@@ -13,7 +13,7 @@
                                   @"googleClientSecret": [instance getGoogleiOSClientSecret],
                                   @"parseAppID": [instance getParseAppID],
                                   @"parseClientID": [instance getParseClientID]};
-        NSDictionary* retDict = @{@"connectURL": [instance getConnectUrl],
+        NSDictionary* retDict = @{@"connectURL": [[instance getConnectUrl] absoluteString],
                                          @"isSkipAuth": @([instance isSkipAuth]),
                                          @"googleWebAppClientID": [instance getGoogleWebAppClientID],
                                          @"ios": iosDict};
