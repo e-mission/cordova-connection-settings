@@ -39,6 +39,8 @@
 
     <header-file src="src/ios/BEMConnectionSettings.h"/>
     <source-file src="src/ios/BEMConnectionSettings.m"/>
+    <header-file src="src/ios/BEMConstants.h"/>
+    <source-file src="src/ios/BEMConstants.m"/>
     <header-file src="src/ios/BEMConnectionSettingsPlugin.h"/>
     <source-file src="src/ios/BEMConnectionSettingsPlugin.m"/>
     <resource-file src="res/ios/connect.plist"/>
