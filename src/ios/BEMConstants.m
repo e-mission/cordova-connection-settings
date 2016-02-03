@@ -6,7 +6,7 @@
 //  Copyright (c) 2014 Kalyanaraman Shankari. All rights reserved.
 //
 
-#import "Constants.h"
+#import "BEMConstants.h"
 
 NSString* const errorDomain = @"e-mission-domain";
 NSString* const BackgroundRefreshNewData = @"BackgroundRefreshNewData";
