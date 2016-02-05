@@ -21,7 +21,7 @@
   <platform name="android">
     <config-file target="res/xml/config.xml" parent="/*">
       <feature name="ConnectionSettings">
-        <param name="android-package" value="edu.berkeley.eecs.emission.cordova.settings.ConnectionSettingsPlugin"/>
+        <param name="android-package" value="edu.berkeley.eecs.emission.cordova.connectionsettings.ConnectionSettingsPlugin"/>
       </feature>
     </config-file>
 
@@ -33,12 +33,14 @@
   <platform name="ios">
     <config-file target="config.xml" parent="/*">
       <feature name="ConnectionSettings">
-        <param name="ios-package" value="BEMConnectionSettings" />
+        <param name="ios-package" value="BEMConnectionSettingsPlugin" />
       </feature>
     </config-file>
 
     <header-file src="src/ios/BEMConnectionSettings.h"/>
     <source-file src="src/ios/BEMConnectionSettings.m"/>
+    <header-file src="src/ios/BEMConstants.h"/>
+    <source-file src="src/ios/BEMConstants.m"/>
     <header-file src="src/ios/BEMConnectionSettingsPlugin.h"/>
     <source-file src="src/ios/BEMConnectionSettingsPlugin.m"/>
     <resource-file src="res/ios/connect.plist"/>

@@ -6,7 +6,7 @@
 //  Copyright (c) 2014 Kalyanaraman Shankari. All rights reserved.
 //
 
-#import "ConnectionSettings.h"
+#import "BEMConnectionSettings.h"
 
 @interface ConnectionSettings() {
     NSDictionary *connSettingDict;
@@ -46,7 +46,7 @@ static ConnectionSettings *sharedInstance;
 
 - (NSString*)getGoogleWebAppClientID
 {
-    return [connSettingDict objectForKey: @"google_web_app_client_id"];
+    return [connSettingDict objectForKey: @"google_webapp_client_id"];
 }
 
 - (NSString*)getGoogleiOSClientID
