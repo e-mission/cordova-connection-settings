@@ -18,8 +18,10 @@ var exec = require("cordova/exec")
  */
 
 var ConnectionSettings = {
-    getSettings: function (successCallback, errorCallback) {
-        exec(successCallback, errorCallback, "ConnectionSettings", "getSettings", []);
+    getSettings: function () {
+    	return new Promise(function(resolve, reject) {	
+    		exec(resolve, reject, "ConnectionSettings", "getSettings", []);
+    	});
     }
 }
 
