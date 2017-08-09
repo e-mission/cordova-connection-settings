@@ -7,6 +7,7 @@
 //
 
 #import "BEMConnectionSettings.h"
+#import "BEMBuiltinUserCache.h"
 
 @interface ConnectionSettings() {
     NSDictionary *connSettingDict;
@@ -17,8 +18,7 @@
 static ConnectionSettings *sharedInstance;
 
 -(id)init{
-    NSString *plistConnPath = [[NSBundle mainBundle] pathForResource:@"connect" ofType:@"plist"];
-    connSettingDict = [[NSDictionary alloc] initWithContentsOfFile:plistConnPath];
+    connSettingDict = [[BuiltinUserCache database] getLocalStorage:CONNECTION_SETTINGS_KEY withMetadata:NO];
     return [super init];
 }
 
@@ -32,7 +32,7 @@ static ConnectionSettings *sharedInstance;
 
 - (NSURL*)getConnectUrl
 {
-    return [NSURL URLWithString:[connSettingDict objectForKey: @"connect_url"]];
+    return [NSURL URLWithString:[connSettingDict objectForKey: @"connectUrl"]];
 }
 
 - (BOOL)isSkipAuth
@@ -44,29 +44,9 @@ static ConnectionSettings *sharedInstance;
     }
 }
 
-- (NSString*)getGoogleWebAppClientID
-{
-    return [connSettingDict objectForKey: @"google_webapp_client_id"];
-}
-
 - (NSString*)getGoogleiOSClientID
 {
-    return [connSettingDict objectForKey: @"google_ios_client_id"];
-}
-
-- (NSString*)getGoogleiOSClientSecret
-{
-    return [connSettingDict objectForKey: @"google_ios_client_secret"];
-}
-
-- (NSString*)getParseAppID
-{
-    return [connSettingDict objectForKey: @"parse_app_id"];
-}
-
-- (NSURL*)getParseClientID
-{
-    return [connSettingDict objectForKey: @"parse_client_id"];
+    return [[connSettingDict objectForKey: @"ios"] objectForKey:@"googleClientID"];
 }
 
 @end
