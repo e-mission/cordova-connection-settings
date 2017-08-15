@@ -7,6 +7,8 @@
 //
 
 #import "BEMConnectionSettings.h"
+#import "BEMBuiltinUserCache.h"
+#import <Cordova/CDV.h>
 
 @interface ConnectionSettings() {
     NSDictionary *connSettingDict;
@@ -17,8 +19,27 @@
 static ConnectionSettings *sharedInstance;
 
 -(id)init{
-    NSString *plistConnPath = [[NSBundle mainBundle] pathForResource:@"connect" ofType:@"plist"];
-    connSettingDict = [[NSDictionary alloc] initWithContentsOfFile:plistConnPath];
+    CDVAppDelegate *ad = [[UIApplication sharedApplication] delegate];
+    CDVViewController *vc = ad.viewController;
+    NSString *configFilePath = [vc.commandDelegate pathForResource:@"json/connectionConfig.json"];
+    
+    // JSON code from here
+    // https://stackoverflow.com/questions/17988178/read-json-file-from-documents-folder-ios-with-javascript
+    
+    BOOL fileExist = [[NSFileManager defaultManager] fileExistsAtPath:configFilePath];
+    if (fileExist) {
+        NSString *content = [NSString stringWithContentsOfFile:configFilePath encoding:NSUTF8StringEncoding error:NULL];
+        NSData *data = [content dataUsingEncoding:NSUTF8StringEncoding];
+        connSettingDict = [NSJSONSerialization JSONObjectWithData:data options:kNilOptions error:nil];
+    } else {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error while config file"
+                                                        message:[NSString stringWithFormat:@"Config file not found at path %@", configFilePath]
+                                                       delegate:nil
+                                              cancelButtonTitle:@"OK"
+                                              otherButtonTitles:nil];
+        [alert show];
+    }
+
     return [super init];
 }
 
@@ -30,9 +51,14 @@ static ConnectionSettings *sharedInstance;
     return sharedInstance;
 }
 
+- (NSDictionary*)getSettings
+{
+    return connSettingDict;
+}
+
 - (NSURL*)getConnectUrl
 {
-    return [NSURL URLWithString:[connSettingDict objectForKey: @"connect_url"]];
+    return [NSURL URLWithString:[connSettingDict objectForKey: @"connectUrl"]];
 }
 
 - (BOOL)isSkipAuth
@@ -44,29 +70,9 @@ static ConnectionSettings *sharedInstance;
     }
 }
 
-- (NSString*)getGoogleWebAppClientID
-{
-    return [connSettingDict objectForKey: @"google_webapp_client_id"];
-}
-
 - (NSString*)getGoogleiOSClientID
 {
-    return [connSettingDict objectForKey: @"google_ios_client_id"];
-}
-
-- (NSString*)getGoogleiOSClientSecret
-{
-    return [connSettingDict objectForKey: @"google_ios_client_secret"];
-}
-
-- (NSString*)getParseAppID
-{
-    return [connSettingDict objectForKey: @"parse_app_id"];
-}
-
-- (NSURL*)getParseClientID
-{
-    return [connSettingDict objectForKey: @"parse_client_id"];
+    return [[connSettingDict objectForKey: @"ios"] objectForKey:@"googleClientID"];
 }
 
 @end

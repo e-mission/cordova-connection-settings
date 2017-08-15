@@ -1,5 +1,6 @@
 #import "BEMConnectionSettingsPlugin.h"
 #import "BEMConnectionSettings.h"
+#import "BEMBuiltinUserCache.h"
 
 @implementation BEMConnectionSettingsPlugin
 
@@ -8,15 +9,8 @@
     NSString* callbackId = [command callbackId];
     
     @try {
-        ConnectionSettings* instance = [ConnectionSettings sharedInstance];
-        NSDictionary *iosDict = @{@"googleClientID": [instance getGoogleiOSClientID],
-                                  @"googleClientSecret": [instance getGoogleiOSClientSecret],
-                                  @"parseAppID": [instance getParseAppID],
-                                  @"parseClientID": [instance getParseClientID]};
-        NSDictionary* retDict = @{@"connectURL": [[instance getConnectUrl] absoluteString],
-                                         @"isSkipAuth": @([instance isSkipAuth]),
-                                         @"googleWebAppClientID": [instance getGoogleWebAppClientID],
-                                         @"ios": iosDict};
+        NSDictionary* retDict = [[ConnectionSettings sharedInstance] getSettings];
+
         CDVPluginResult* result = [CDVPluginResult
                                    resultWithStatus:CDVCommandStatus_OK
                                    messageAsDictionary:retDict];

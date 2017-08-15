@@ -7,14 +7,12 @@
 //
 
 #import <Foundation/Foundation.h>
+#define CONNECTION_SETTINGS_KEY @"connection_settings"
 
 @interface ConnectionSettings : NSObject
 +(ConnectionSettings*) sharedInstance;
+-(NSDictionary*)getSettings;
 -(NSURL*) getConnectUrl;
 -(BOOL)isSkipAuth;
--(NSString*) getGoogleWebAppClientID;
 -(NSString*) getGoogleiOSClientID;
--(NSString*) getGoogleiOSClientSecret;
--(NSString*) getParseAppID;
--(NSString*) getParseClientID;
 @end

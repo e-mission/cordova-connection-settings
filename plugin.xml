@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <plugin xmlns="http://www.phonegap.com/ns/plugins/1.0"
         id="edu.berkeley.eecs.emission.cordova.settings"
-        version="0.0.1">
+        version="1.0.0">
 
   <name>ConnectionSettings</name>
   <description>Simple package that stores all the connection settings that need to be configured</description>
@@ -27,7 +27,6 @@
 
     <source-file src="src/android/ConnectionSettingsPlugin.java" target-dir="src/edu/berkeley/eecs/emission/cordova/connectionsettings"/>
     <source-file src="src/android/ConnectionSettings.java" target-dir="src/edu/berkeley/eecs/emission/cordova/connectionsettings"/>
-    <resource-file src="res/android/connect.xml" target="res/values/connect.xml" />
   </platform>
 
   <platform name="ios">
@@ -43,6 +42,5 @@
     <source-file src="src/ios/BEMConstants.m"/>
     <header-file src="src/ios/BEMConnectionSettingsPlugin.h"/>
     <source-file src="src/ios/BEMConnectionSettingsPlugin.m"/>
-    <resource-file src="res/ios/connect.plist"/>
   </platform>
 </plugin>
