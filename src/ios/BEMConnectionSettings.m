@@ -8,6 +8,7 @@
 
 #import "BEMConnectionSettings.h"
 #import "BEMBuiltinUserCache.h"
+#import <Cordova/CDV.h>
 
 @interface ConnectionSettings() {
     NSDictionary *connSettingDict;
@@ -18,7 +19,27 @@
 static ConnectionSettings *sharedInstance;
 
 -(id)init{
-    connSettingDict = [[BuiltinUserCache database] getLocalStorage:CONNECTION_SETTINGS_KEY withMetadata:NO];
+    CDVAppDelegate *ad = [[UIApplication sharedApplication] delegate];
+    CDVViewController *vc = ad.viewController;
+    NSString *configFilePath = [vc.commandDelegate pathForResource:@"json/connectionConfig.json"];
+    
+    // JSON code from here
+    // https://stackoverflow.com/questions/17988178/read-json-file-from-documents-folder-ios-with-javascript
+    
+    BOOL fileExist = [[NSFileManager defaultManager] fileExistsAtPath:configFilePath];
+    if (fileExist) {
+        NSString *content = [NSString stringWithContentsOfFile:configFilePath encoding:NSUTF8StringEncoding error:NULL];
+        NSData *data = [content dataUsingEncoding:NSUTF8StringEncoding];
+        connSettingDict = [NSJSONSerialization JSONObjectWithData:data options:kNilOptions error:nil];
+    } else {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error while config file"
+                                                        message:[NSString stringWithFormat:@"Config file not found at path %@", configFilePath]
+                                                       delegate:nil
+                                              cancelButtonTitle:@"OK"
+                                              otherButtonTitles:nil];
+        [alert show];
+    }
+
     return [super init];
 }
 
@@ -28,6 +49,11 @@ static ConnectionSettings *sharedInstance;
         sharedInstance = [ConnectionSettings new];
     }
     return sharedInstance;
+}
+
+- (NSDictionary*)getSettings
+{
+    return connSettingDict;
 }
 
 - (NSURL*)getConnectUrl
