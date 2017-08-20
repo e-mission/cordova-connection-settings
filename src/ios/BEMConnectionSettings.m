@@ -61,18 +61,14 @@ static ConnectionSettings *sharedInstance;
     return [NSURL URLWithString:[connSettingDict objectForKey: @"connectUrl"]];
 }
 
-- (BOOL)isSkipAuth
+- (NSString*) authMethod
 {
-    if([[self getConnectUrl].scheme isEqualToString:@"http"]) {
-        return true;
-    } else {
-        return false;
-    }
+    return [[[connSettingDict objectForKey: @"ios"] objectForKey:@"auth"] objectForKey:@"method"];
 }
 
-- (NSString*)getGoogleiOSClientID
+- (NSString*)getClientID
 {
-    return [[connSettingDict objectForKey: @"ios"] objectForKey:@"googleClientID"];
+    return [[[connSettingDict objectForKey: @"ios"] objectForKey:@"auth"] objectForKey:@"clientID"];
 }
 
 @end
