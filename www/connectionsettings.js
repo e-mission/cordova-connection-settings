@@ -22,11 +22,6 @@ var ConnectionSettings = {
     		exec(resolve, reject, "ConnectionSettings", "getSettings", []);
     	});
     }
-    setSettings: function (newConfig) {
-        return new Promise(function(resolve, reject) {
-            exec(resolve, reject, "ConnectionSettings", "setConfig", [newConfig]);
-        };
-    }
 }
 
 module.exports = ConnectionSettings;
