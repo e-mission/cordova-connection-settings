@@ -13,6 +13,6 @@
 +(ConnectionSettings*) sharedInstance;
 -(NSDictionary*)getSettings;
 -(NSURL*) getConnectUrl;
--(BOOL)isSkipAuth;
--(NSString*) getGoogleiOSClientID;
+-(NSString*) authMethod;
+-(NSString*) getClientID;
 @end

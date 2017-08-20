@@ -77,11 +77,12 @@ public class ConnectionSettings {
         } catch (MalformedURLException e) {
             Log.exception(ctxt, TAG, e);
             e.printStackTrace();
+            return null;
         } catch (IOException e) {
             Log.exception(ctxt, TAG, e);
             e.printStackTrace();
-        }
         return null;
+    }
     }
 
     private static JSONObject getConfigFromFile(Context ctxt, InputStream configFileStream) {
@@ -139,13 +140,16 @@ public class ConnectionSettings {
         }
 	}
 
-    public static boolean isSkipAuth(Context ctxt) {
-        String connectURL = getConnectURL(ctxt);
-        if (connectURL.startsWith("http:")) {
-            System.out.println("connectURL starts with http, skipping auth");
-            return true;
-        } else {
-            return false;
+    public static String getAuthMethod(Context ctxt) {
+        if (sharedInstance(ctxt).connectionSettings == null) {
+            return null;
+        }
+        try {
+            return ConnectionSettings.nativeAuth(ctxt).getString("method");
+        } catch(JSONException e) {
+            Log.e(ctxt, TAG, "Got exception while retrieving connection settings");
+            Log.exception(ctxt, TAG, e);
+            return null;
         }
     }
 	
@@ -154,11 +158,15 @@ public class ConnectionSettings {
             return null;
         }
         try {
-            return sharedInstance(ctxt).connectionSettings.getJSONObject("android").getString("googleWebAppClientID");
+            return ConnectionSettings.nativeAuth(ctxt).getString("clientID");
         } catch(JSONException e) {
             Log.e(ctxt, TAG, "Got exception while retrieving connection settings");
             Log.exception(ctxt, TAG, e);
             return null;
 	}
 	}
+
+    private static JSONObject nativeAuth(Context ctxt) throws JSONException {
+        return sharedInstance(ctxt).connectionSettings.getJSONObject("android").getJSONObject("auth");
+    }
 }

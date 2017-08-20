@@ -8,10 +8,16 @@ var exec = require("cordova/exec")
  *    "connectUrl": "...",
  *    "isSkipAuth": true/false,
  *    "android": {
- *        "googleWebAppClientID": "...",
+ *        "auth": {
+ *            "method": "e.g. google-authutil",
+ *            "clientID": "e.g. XXXXX"
+ *        }
  *    },
  *    "ios": {
- *       "googleClientID": "...",
+ *        "auth": {
+ *            "method": "e.g. google-signin-lib",
+ *            "clientID": "e.g. YYYYY"
+ *        }
  *    }
  * }
  */
@@ -21,11 +27,6 @@ var ConnectionSettings = {
     	return new Promise(function(resolve, reject) {	
     		exec(resolve, reject, "ConnectionSettings", "getSettings", []);
     	});
-    }
-    setSettings: function (newConfig) {
-        return new Promise(function(resolve, reject) {
-            exec(resolve, reject, "ConnectionSettings", "setConfig", [newConfig]);
-        };
     }
 }
 
