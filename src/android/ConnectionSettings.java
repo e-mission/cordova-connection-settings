@@ -29,6 +29,12 @@ public class ConnectionSettings {
     private static ConnectionSettings sharedInstance;
     static String CONNECTION_SETTINGS_KEY = "connection_settings";
     private static String TAG = "ConnectionSettings";
+    // This is the default for the android emulator
+    // Default for genymotion is "http://10.0.3.2:8080"
+    // TODO: Figure out if more people use genymotion or native emulator
+    // x86 native emulator isn't half bad
+    private static final String DEFAULT_URL = "http://10.0.2.2:8080";
+    private static final String DEFAULT_METHOD = "dummy-dev";
 
     private ConnectionSettings() {
     }
@@ -85,10 +91,39 @@ public class ConnectionSettings {
     }
     }
 
+    /*
+     * Unlike the iOS implementation, we can't just have getConfigFromFile return a default
+     * implementation because all ways of getting a JSONObject (put and parse) can throw a JSONException.
+     * And even if we know that the default settings will never throw that exception, we need to
+     * either pass up the exception or handle it, in which case we need a default for the default
+     *
+     * Instead, we simply override the static methods to return default values. But then the javascript
+     * getSettings() is inconsistent with the values returned from the static methods.
+     *
+     * So let's go back to the default implementation.
+     */
+
+    private static JSONObject getDefaultConfig(Context ctxt) {
+        try {
+            JSONObject retVal = new JSONObject();
+            JSONObject androidObject = new JSONObject();
+            JSONObject authObject = new JSONObject();
+
+            retVal.put("connectUrl", DEFAULT_URL);
+            retVal.put("android", androidObject);
+            androidObject.put("auth", authObject);
+            authObject.put("method", DEFAULT_METHOD);
+            return retVal;
+        } catch (JSONException e) {
+            Log.exception(ctxt, TAG, e);
+            return null;
+        }
+    }
+
     private static JSONObject getConfigFromFile(Context ctxt, InputStream configFileStream) {
         if (configFileStream == null) {
             Log.i(ctxt, TAG, "getConfigFromFile: configFilePath = "+configFileStream+" returning ");
-            return null;
+            return getDefaultConfig(ctxt);
         }
         try {
             BufferedReader br = new BufferedReader(new InputStreamReader(configFileStream));
@@ -101,19 +136,16 @@ public class ConnectionSettings {
             return new JSONObject(finalString.toString());
         } catch (FileNotFoundException e) {
             Log.exception(ctxt, TAG, e);
-            sharedInstance.connectionSettings = null;
             e.printStackTrace();
-            return null;
+            return getDefaultConfig(ctxt);
         } catch (IOException e) {
             Log.exception(ctxt, TAG, e);
-            sharedInstance.connectionSettings = null;
             e.printStackTrace();
-            return null;
+            return getDefaultConfig(ctxt);
             } catch (JSONException e) {
             Log.exception(ctxt, TAG, e);
-                sharedInstance.connectionSettings = null;
             e.printStackTrace();
-            return null;
+            return getDefaultConfig(ctxt);
             }
         }
 
