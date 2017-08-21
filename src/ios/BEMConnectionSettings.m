@@ -32,12 +32,9 @@ static ConnectionSettings *sharedInstance;
         NSData *data = [content dataUsingEncoding:NSUTF8StringEncoding];
         connSettingDict = [NSJSONSerialization JSONObjectWithData:data options:kNilOptions error:nil];
     } else {
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error while config file"
-                                                        message:[NSString stringWithFormat:@"Config file not found at path %@", configFilePath]
-                                                       delegate:nil
-                                              cancelButtonTitle:@"OK"
-                                              otherButtonTitles:nil];
-        [alert show];
+        // Use default values optimized for dev setting
+        connSettingDict = @{@"connectUrl": @"http://localhost:8080",
+                            @"ios": @{@"auth": @{@"method": @"dummy-dev"}}};
     }
 
     return [super init];
@@ -68,6 +65,9 @@ static ConnectionSettings *sharedInstance;
 
 - (NSString*)getClientID
 {
+    if (connSettingDict == NULL) {
+        return NULL;
+    }
     return [[[connSettingDict objectForKey: @"ios"] objectForKey:@"auth"] objectForKey:@"clientID"];
 }
 
