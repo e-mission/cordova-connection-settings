@@ -195,8 +195,28 @@ public class ConnectionSettings {
             Log.e(ctxt, TAG, "Got exception while retrieving connection settings");
             Log.exception(ctxt, TAG, e);
             return null;
+	    }
 	}
-	}
+
+    /**
+     * Returns a value mapped by the key from the auth config for this native platform
+     *
+     * @param ctxt The associated context
+     * @param key The key
+     * @return The value mapped by the key
+     */
+    public static String getAuthValue(Context ctxt, String key) {
+        if (sharedInstance(ctxt).connectionSettings == null) {
+            return null;
+        }
+        try {
+            return ConnectionSettings.nativeAuth(ctxt).getString(key);
+        } catch(JSONException e) {
+            Log.e(ctxt, TAG, "Got exception while retrieving connection settings");
+            Log.exception(ctxt, TAG, e);
+            return null;
+        }
+    }
 
     private static JSONObject nativeAuth(Context ctxt) throws JSONException {
         return sharedInstance(ctxt).connectionSettings.getJSONObject("android").getJSONObject("auth");
