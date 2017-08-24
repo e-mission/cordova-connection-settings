@@ -198,7 +198,14 @@ public class ConnectionSettings {
 	    }
 	}
 
-    public static String get(Context ctxt, String key) {
+    /**
+     * Returns a value mapped by the key from the auth config for this native platform
+     *
+     * @param ctxt The associated context
+     * @param key The key
+     * @return The value mapped by the key
+     */
+    public static String getAuthValue(Context ctxt, String key) {
         if (sharedInstance(ctxt).connectionSettings == null) {
             return null;
         }
