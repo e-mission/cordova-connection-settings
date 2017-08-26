@@ -1,6 +1,7 @@
 package edu.berkeley.eecs.emission.cordova.connectionsettings;
 
 import android.content.Context;
+import android.support.annotation.Nullable;
 import android.text.TextUtils;
 
 import org.apache.cordova.ConfigXmlParser;
@@ -17,6 +18,7 @@ import java.net.URL;
 import java.util.Arrays;
 
 import edu.berkeley.eecs.emission.cordova.unifiedlogger.Log;
+import edu.berkeley.eecs.emission.cordova.usercache.UserCacheFactory;
 
 /*
  * Single class that returns all the connection level settings that need to be customized
@@ -27,8 +29,8 @@ public class ConnectionSettings {
     private JSONObject connectionSettings;
 
     private static ConnectionSettings sharedInstance;
-    static String CONNECTION_SETTINGS_KEY = "connection_settings";
-    private static String TAG = "ConnectionSettings";
+    private static final String CONNECTION_SETTINGS_KEY = "connection_settings";
+    private static final String TAG = "ConnectionSettings";
     // This is the default for the android emulator
     // Default for genymotion is "http://10.0.3.2:8080"
     // TODO: Figure out if more people use genymotion or native emulator
@@ -42,19 +44,30 @@ public class ConnectionSettings {
     private static ConnectionSettings sharedInstance(Context ctxt) {
         if (sharedInstance == null) {
             sharedInstance = new ConnectionSettings();
+            sharedInstance.connectionSettings = getConfigFromDB(ctxt);
+            /*
+             * Commented out until we know for sure that this works
+             * https://github.com/e-mission/cordova-connection-settings/issues/9#issuecomment-324705272
             InputStream configFileStream = getConfigFileStream(ctxt);
             Log.i(ctxt, TAG, "configFilePath = "+configFileStream);
             sharedInstance.connectionSettings = getConfigFromFile(ctxt, configFileStream);
+            */
         }
         return sharedInstance;
     }
+
+
 
     /*
      * This has to return an InputStream because you cannot read assets using a path.
      * Instead, you have to open the stream using ctxt.getAssets().open(filepath)
      * https://stackoverflow.com/questions/4820816/how-to-get-uri-from-an-asset-file
+     *
+     * Currently unused - leave it in place for a year or so until we know whether the
+     * database solution is reliable.
      */
 
+    @Nullable
     private static InputStream getConfigFileStream(Context ctxt) {
             try {
             ConfigXmlParser parser = new ConfigXmlParser();
@@ -103,7 +116,8 @@ public class ConnectionSettings {
      * So let's go back to the default implementation.
      */
 
-    private static JSONObject getDefaultConfig(Context ctxt) {
+    @Nullable
+    static JSONObject getDefaultConfig(Context ctxt) {
         try {
             JSONObject retVal = new JSONObject();
             JSONObject androidObject = new JSONObject();
@@ -119,6 +133,7 @@ public class ConnectionSettings {
             return null;
         }
     }
+
 
     private static JSONObject getConfigFromFile(Context ctxt, InputStream configFileStream) {
         if (configFileStream == null) {
@@ -142,12 +157,12 @@ public class ConnectionSettings {
             Log.exception(ctxt, TAG, e);
             e.printStackTrace();
             return getDefaultConfig(ctxt);
-            } catch (JSONException e) {
+        } catch (JSONException e) {
             Log.exception(ctxt, TAG, e);
             e.printStackTrace();
             return getDefaultConfig(ctxt);
-            }
         }
+    }
 
     public static JSONObject getSettings(Context ctxt) {
         JSONObject connectionSettings = sharedInstance(ctxt).connectionSettings;
@@ -155,11 +170,32 @@ public class ConnectionSettings {
         return connectionSettings;
     }
 
-	public static String getConnectURL(Context ctxt) {
+    @Nullable
+    private static JSONObject getConfigFromDB(Context ctxt) {
+        try {
+            JSONObject retVal = UserCacheFactory.getUserCache(ctxt).getLocalStorage(CONNECTION_SETTINGS_KEY, false);
+            // We know that this is an object and not an array
+            // so we don't need to handle any other use case
+            // we catch generic JSONObjects as well anyway
+            return retVal;
+        } catch (JSONException e) {
+            Log.e(ctxt, TAG, "Got exception while retrieving connection settings");
+            Log.exception(ctxt, TAG, e);
+            return null;
+        }
+    }
+
+    static void setSettings(Context ctxt, JSONObject newSettings) {
+        sharedInstance(ctxt).connectionSettings = newSettings;
+        UserCacheFactory.getUserCache(ctxt).putLocalStorage(CONNECTION_SETTINGS_KEY, newSettings);
+    }
+
+    @Nullable
+    public static String getConnectURL(Context ctxt) {
         JSONObject connectionSettings = sharedInstance(ctxt).connectionSettings;
         Log.d(ctxt, TAG, "in getConnectURL, connectionSettings = "+connectionSettings);
         if (connectionSettings == null) {
-            return null;
+            throw new RuntimeException("Connection settings not yet saved to database!");
         }
         try {
             String retVal = connectionSettings.getString("connectUrl");
@@ -170,11 +206,12 @@ public class ConnectionSettings {
             Log.exception(ctxt, TAG, e);
             return null;
         }
-	}
+    }
 
+    @Nullable
     public static String getAuthMethod(Context ctxt) {
         if (sharedInstance(ctxt).connectionSettings == null) {
-            return null;
+            throw new RuntimeException("Connection settings not yet saved to database!");
         }
         try {
             return ConnectionSettings.nativeAuth(ctxt).getString("method");
@@ -185,7 +222,8 @@ public class ConnectionSettings {
         }
     }
 	
-	public static String getGoogleWebAppClientID(Context ctxt) {
+	@Nullable
+    public static String getGoogleWebAppClientID(Context ctxt) {
         if (sharedInstance(ctxt).connectionSettings == null) {
             return null;
         }
@@ -205,9 +243,10 @@ public class ConnectionSettings {
      * @param key The key
      * @return The value mapped by the key
      */
+    @Nullable
     public static String getAuthValue(Context ctxt, String key) {
         if (sharedInstance(ctxt).connectionSettings == null) {
-            return null;
+            throw new RuntimeException("Connection settings not yet saved to database!");
         }
         try {
             return ConnectionSettings.nativeAuth(ctxt).getString(key);

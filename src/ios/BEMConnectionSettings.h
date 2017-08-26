@@ -12,6 +12,8 @@
 @interface ConnectionSettings : NSObject
 +(ConnectionSettings*) sharedInstance;
 -(NSDictionary*)getSettings;
+-(NSDictionary*)getDefaultConfig;
+-(void)setSettings:(NSDictionary*)newConfig;
 -(NSURL*) getConnectUrl;
 -(NSString*) authMethod;
 -(NSString*) getClientID;
