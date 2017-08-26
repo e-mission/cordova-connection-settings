@@ -45,13 +45,13 @@ public class ConnectionSettings {
         if (sharedInstance == null) {
             sharedInstance = new ConnectionSettings();
             sharedInstance.connectionSettings = getConfigFromDB(ctxt);
-            /*
-             * Commented out until we know for sure that this works
-             * https://github.com/e-mission/cordova-connection-settings/issues/9#issuecomment-324705272
-            InputStream configFileStream = getConfigFileStream(ctxt);
-            Log.i(ctxt, TAG, "configFilePath = "+configFileStream);
-            sharedInstance.connectionSettings = getConfigFromFile(ctxt, configFileStream);
-            */
+            // Can comment out later once all existing installs have been updated
+            // See https://github.com/e-mission/cordova-connection-settings/issues/9#issuecomment-325081511
+            if (sharedInstance.connectionSettings == null) {
+                InputStream configFileStream = getConfigFileStream(ctxt);
+                Log.i(ctxt, TAG, "configFilePath = "+configFileStream);
+                sharedInstance.connectionSettings = getConfigFromFile(ctxt, configFileStream);
+            }
         }
         return sharedInstance;
     }

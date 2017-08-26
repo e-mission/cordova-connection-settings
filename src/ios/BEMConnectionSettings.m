@@ -19,13 +19,15 @@
 static ConnectionSettings *sharedInstance;
 
 -(id)init{
+    connSettingDict = [self getConfigFromDB];
+    if (connSettingDict == NULL) {
+        connSettingDict = [self getConfigFromFile];
+    }
     /*
-    connSettingDict = [self getConfigFromFile];
     if (connSettingDict == NULL) {
         connSettingDict = [self getDefaultConfig];
     }
      */
-    connSettingDict = [self getConfigFromDB];
     return [super init];
 }
 
