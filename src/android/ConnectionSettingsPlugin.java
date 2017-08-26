@@ -15,6 +15,17 @@ public class ConnectionSettingsPlugin extends CordovaPlugin {
             JSONObject settings = ConnectionSettings.getSettings(ctxt);
             callbackContext.success(settings);
             return true;
+        } else if (action.equals("setSettings")){
+            Context ctxt = cordova.getActivity();
+            JSONObject newSettings = data.getJSONObject(0);
+            ConnectionSettings.setSettings(ctxt, newSettings);
+            callbackContext.success();
+            return true;
+        } else if (action.equals("getDefaultSettings")) {
+            Context ctxt = cordova.getActivity();
+            JSONObject defaultSettings = ConnectionSettings.getDefaultConfig(ctxt);
+            callbackContext.success(defaultSettings);
+            return true;
         } else {
             return false;
         }
