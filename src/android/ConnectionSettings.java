@@ -221,20 +221,6 @@ public class ConnectionSettings {
             return null;
         }
     }
-	
-	@Nullable
-    public static String getGoogleWebAppClientID(Context ctxt) {
-        if (sharedInstance(ctxt).connectionSettings == null) {
-            return null;
-        }
-        try {
-            return ConnectionSettings.nativeAuth(ctxt).getString("clientID");
-        } catch(JSONException e) {
-            Log.e(ctxt, TAG, "Got exception while retrieving connection settings");
-            Log.exception(ctxt, TAG, e);
-            return null;
-	    }
-	}
 
     /**
      * Returns a value mapped by the key from the auth config for this native platform
