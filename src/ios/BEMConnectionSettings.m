@@ -97,33 +97,26 @@ static ConnectionSettings *sharedInstance;
     return [NSURL URLWithString:[connSettingDict objectForKey: @"connectUrl"]];
 }
 
+- (NSDictionary*) nativeAuth
+{
+    if (connSettingDict == NULL) {
+        NSException* notFoundEx = [[NSException alloc] initWithName:@"SettingsNotFound"
+                                                             reason:@"Connection settings not saved to database!"
+                                                           userInfo:NULL];
+        @throw notFoundEx;
+    }
+    return [[connSettingDict objectForKey: @"ios"] objectForKey:@"auth"];
+}
+
 - (NSString*) authMethod
 {
-    if (connSettingDict == NULL) {
-        NSException* notFoundEx = [[NSException alloc] initWithName:@"SettingsNotFound"
-                                                             reason:@"Connection settings not saved to database!"
-                                                           userInfo:NULL];
-        @throw notFoundEx;
+    return [[self nativeAuth] objectForKey:@"method"];
     }
 
-    return [[[connSettingDict objectForKey: @"ios"] objectForKey:@"auth"] objectForKey:@"method"];
-}
-
-- (NSString*)getClientID
+- (NSString*) authValueForKey:(NSString*) key
 {
-    if (connSettingDict == NULL) {
-        NSException* notFoundEx = [[NSException alloc] initWithName:@"SettingsNotFound"
-                                                             reason:@"Connection settings not saved to database!"
-                                                           userInfo:NULL];
-        @throw notFoundEx;
-    }
-
-    if (connSettingDict == NULL) {
-        return NULL;
-    }
-    return [[[connSettingDict objectForKey: @"ios"] objectForKey:@"auth"] objectForKey:@"clientID"];
+    return [[self nativeAuth] objectForKey:key];
 }
-
 // END: Native code access methods
 
 @end
