@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <plugin xmlns="http://www.phonegap.com/ns/plugins/1.0"
         id="edu.berkeley.eecs.emission.cordova.settings"
-        version="1.1.1">
+        version="1.2.0">
 
   <name>ConnectionSettings</name>
   <description>Simple package that stores all the connection settings that need to be configured</description>
@@ -17,6 +17,8 @@
   <js-module src="www/connectionsettings.js" name="connectionsettings">
     <clobbers target="cordova.plugins.BEMConnectionSettings" />
   </js-module>
+
+  <hook type="after_plugin_install" src="hooks/android/addResourcesClassImport.js" />
 
   <platform name="android">
     <config-file target="res/xml/config.xml" parent="/*">
