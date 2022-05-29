@@ -14,7 +14,7 @@
 -(NSDictionary*)getSettings;
 -(NSDictionary*)getDefaultConfig;
 -(void)setSettings:(NSDictionary*)newConfig;
--(NSURL*) getConnectUrl;
+-(NSString*) getConnectString;
 -(NSString*) authMethod;
 -(NSString*) authValueForKey:(NSString*) key;
 @end
