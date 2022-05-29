@@ -85,7 +85,7 @@ static ConnectionSettings *sharedInstance;
 // from the plugin initialize methods before the javascript has the opportunity to set the config
 // Note that we cannot throw from the constructor instead because then we cannot create the shared instance
 // and even the javascript cannot set the config
-- (NSURL*)getConnectUrl
+- (NSString*)getConnectString
 {
     if (connSettingDict == NULL) {
         NSException* notFoundEx = [[NSException alloc] initWithName:@"SettingsNotFound"
@@ -94,7 +94,7 @@ static ConnectionSettings *sharedInstance;
         @throw notFoundEx;
     }
 
-    return [NSURL URLWithString:[connSettingDict objectForKey: @"connectUrl"]];
+    return [connSettingDict objectForKey: @"connectUrl"];
 }
 
 - (NSDictionary*) nativeAuth
